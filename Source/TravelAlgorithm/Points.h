@@ -6,6 +6,28 @@
 #include "GameFramework/Actor.h"
 #include "Points.generated.h"
 
+USTRUCT(BlueprintType)
+struct FInnerMatrixStruct {
+	GENERATED_BODY()
+	
+	UPROPERTY()
+	TArray<int32> InnerMatrix;
+};
+
+USTRUCT()
+struct FVertex {
+	GENERATED_BODY()
+
+	int32 Value = 0; 
+	bool Visited;
+};
+
+USTRUCT()
+struct FGraph {
+	GENERATED_BODY()
+	
+};
+
 UCLASS()
 class TRAVELALGORITHM_API APoints : public AActor
 {
@@ -18,14 +40,11 @@ public:
 	// Vertexes visualized
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
 	class UStaticMeshComponent* SphereMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
-	TArray<UStaticMeshComponent*> Vertex;
 	
-	UFUNCTION()
-	void Dijkstra();
-
-
+	int32 VertexAmount = 5;
+	
+	UPROPERTY()
+	TArray<FInnerMatrixStruct> AdjacencyMatrix;
 	
 	UPROPERTY()
 	APoints* StartPoint;
@@ -33,7 +52,7 @@ public:
 	UPROPERTY()
 	APoints* EndPoint;
 
-
+	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	class UMaterial* StartMaterial;
@@ -57,6 +76,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	void MatrixSetup();
+
+	UFUNCTION()
+	void EdgeSetup();
+	
+	UFUNCTION()
+	void Dijkstra();
 
 
 	

@@ -16,14 +16,14 @@ APoints::APoints()
 	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	SphereMesh->SetupAttachment(GetRootComponent());
 	
-	Vertex.Init(nullptr, 6);
-
-	Vertex[0] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment0"));
-	Vertex[1] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment1"));
-	Vertex[2] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment2"));
-	Vertex[3] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment3"));
-	Vertex[4] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment4"));
-	Vertex[5] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment5"));
+	// Vertex.Init(nullptr, 6);
+	//
+	// Vertex[0] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment0"));
+	// Vertex[1] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment1"));
+	// Vertex[2] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment2"));
+	// Vertex[3] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment3"));
+	// Vertex[4] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment4"));
+	// Vertex[5] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment5"));
 
 	// Materials
 	StartMaterial = CreateDefaultSubobject<UMaterial>(TEXT("Blue"));
@@ -33,19 +33,19 @@ APoints::APoints()
 	
 	//static ConstructorHelpers::FObjectFinder<UStaticMesh>VertexMesh(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
 	
-	for (int i = 0; i < Vertex.Num(); i++) {
-		if (i == 0) {
-			Vertex[0]->SetMaterial(0, StartMaterial);
-		}
-		else if (i == Vertex.Num()) {
-			Vertex[Vertex.Num()]->SetMaterial(3, EndMaterial);
-		}
-		else {
-			Vertex[i]->SetMaterial(1, UnvisitedMaterial);
-		}
-	}
+	// for (int i = 0; i < Vertex.Num(); i++) {
+	// 	if (i == 0) {
+	// 		Vertex[0]->SetMaterial(0, StartMaterial);
+	// 	}
+	// 	else if (i == Vertex.Num()) {
+	// 		Vertex[Vertex.Num()]->SetMaterial(3, EndMaterial);
+	// 	}
+	// 	else {
+	// 		Vertex[i]->SetMaterial(1, UnvisitedMaterial);
+	// 	}
+	// }
 	
-
+    
 	
 }
 
@@ -56,10 +56,15 @@ void APoints::BeginPlay()
 	Super::BeginPlay();
 
 	// Randomize vertex positions
-	for (int i = 0; i < Vertex.Num(); i++) {
-		Vertex[i]->SetWorldLocation(FVector(FMath::RandRange(0.0f, 100.0f), FMath::RandRange(0.0f, 100.0f), FMath::RandRange(0.0f, 100.0f)));
-	}
+	// for (int i = 0; i < Vertex.Num(); i++) {
+	// 	Vertex[i]->SetWorldLocation(FVector(FMath::RandRange(0.0f, 100.0f), FMath::RandRange(0.0f, 100.0f), FMath::RandRange(0.0f, 100.0f)));
+	// }
+
 	
+	AdjacencyMatrix.Reset(VertexAmount);
+	for (int i = 0; i < AdjacencyMatrix.Num(); i++) {
+		AdjacencyMatrix[i].InnerMatrix.Reset(VertexAmount);
+	}
 }
 
 
@@ -73,5 +78,11 @@ void APoints::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void APoints::MatrixSetup() {
+}
+
+void APoints::EdgeSetup() {
 }
 
