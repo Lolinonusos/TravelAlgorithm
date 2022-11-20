@@ -34,10 +34,17 @@ public:
 	
 	UPROPERTY()
 	AMyVertex* Edge;
-	
-	TArray<FMyEdge> EdgeList; // Contains edges that point to other vertexes
 
-	int32 Cost; 
+	UPROPERTY()
+	AMyVertex* ReverseEdge;
+	
+	UPROPERTY()
+	AMyVertex* PreviousVert;
+	
+	TArray<AMyVertex*> EdgeList; // Contains edges that point to other vertexes
+
+	
+	float Distance;
 	
 	bool bVisited = false;
 	
@@ -65,4 +72,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void SetSartMat();
+	void SetUnvisitedMat();
+	void SetVisitedMat();
+	void SetEndMat();
 };
+
+

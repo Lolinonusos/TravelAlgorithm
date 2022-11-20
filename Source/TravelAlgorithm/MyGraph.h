@@ -24,27 +24,25 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vertex")
 	TSubclassOf<AMyVertex> BP_Vertex;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Vertex")
 	TArray<AMyVertex*> VertList; // Hold all the nodes
 
-	int Distance;
-
 	
-	UFUNCTION()
-	void MatrixSetup();
+	float TotalDistance;
+	
 
 	UFUNCTION()
-	void EdgeSetup(int SourceVert, int DestVert, float EdgeWeigth);
+	void EdgeSetup();
 
 	// Part of Travelling Salesman
 	
 	// Part of Dijkstra
 	UFUNCTION()
-	int Dijkstra();
+	void Dijkstra(AMyVertex* Start, AMyVertex* End);
 
 	// Part of A*
 	int AStar();

@@ -3,9 +3,7 @@
 
 #include "MyVertex.h"
 
-
 #include "Components/StaticMeshComponent.h"
-#include "Components/SphereComponent.h"
 
 // Sets default values
 AMyVertex::AMyVertex()
@@ -15,35 +13,14 @@ AMyVertex::AMyVertex()
 
 	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	SphereMesh->SetupAttachment(GetRootComponent());
-	
-	// Vertex.Init(nullptr, 6);
-	//
-	// Vertex[0] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment0"));
-	// Vertex[1] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment1"));
-	// Vertex[2] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment2"));
-	// Vertex[3] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment3"));
-	// Vertex[4] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment4"));
-	// Vertex[5] = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VertexMoment5"));
 
 	// Materials
-	StartMaterial = CreateDefaultSubobject<UMaterial>(TEXT("Blue"));
-	UnvisitedMaterial = CreateDefaultSubobject<UMaterial>(TEXT("White"));
-	VisitedMaterial = CreateDefaultSubobject<UMaterial>(TEXT("Red"));
-	EndMaterial = CreateDefaultSubobject<UMaterial>(TEXT("Green"));
+	StartMaterial = CreateDefaultSubobject<UMaterial>(TEXT("StartMaterial"));
+	UnvisitedMaterial = CreateDefaultSubobject<UMaterial>(TEXT("UnvisitedMaterial"));
+	VisitedMaterial = CreateDefaultSubobject<UMaterial>(TEXT("VisitedMaterial"));
+	EndMaterial = CreateDefaultSubobject<UMaterial>(TEXT("EndMaterial"));
 	
-	//static ConstructorHelpers::FObjectFinder<UStaticMesh>VertexMesh(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
 	
-	// for (int i = 0; i < Vertex.Num(); i++) {
-	// 	if (i == 0) {
-	// 		Vertex[0]->SetMaterial(0, StartMaterial);
-	// 	}
-	// 	else if (i == Vertex.Num()) {
-	// 		Vertex[Vertex.Num()]->SetMaterial(3, EndMaterial);
-	// 	}
-	// 	else {
-	// 		Vertex[i]->SetMaterial(1, UnvisitedMaterial);
-	// 	}
-	// }
 }
 
 // Called when the game starts or when spawned
@@ -60,3 +37,18 @@ void AMyVertex::Tick(float DeltaTime)
 
 }
 
+void AMyVertex::SetSartMat() {
+	SphereMesh->SetMaterial(0, StartMaterial);
+}
+
+void AMyVertex::SetUnvisitedMat() {
+	SphereMesh->SetMaterial(0, UnvisitedMaterial);
+}
+
+void AMyVertex::SetVisitedMat() {
+	SphereMesh->SetMaterial(0, VisitedMaterial);
+}
+
+void AMyVertex::SetEndMat() {
+	SphereMesh->SetMaterial(0, EndMaterial);
+}
