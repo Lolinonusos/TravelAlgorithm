@@ -39,6 +39,8 @@ public:
 	void EdgeSetup();
 
 	// Part of Travelling Salesman
+	UFUNCTION()
+	void TSP(AMyVertex* Start);
 	
 	// Part of Dijkstra
 	UFUNCTION()

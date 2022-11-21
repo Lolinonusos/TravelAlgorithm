@@ -32,14 +32,13 @@ public:
 
 	int32 Weight;
 	
-	UPROPERTY()
-	AMyVertex* Edge;
 
-	UPROPERTY()
-	AMyVertex* ReverseEdge;
+	//UPROPERTY()
+	//AMyVertex* ReverseEdge;
 	
 	UPROPERTY()
 	AMyVertex* PreviousVert;
+
 	
 	TArray<AMyVertex*> EdgeList; // Contains edges that point to other vertexes
 

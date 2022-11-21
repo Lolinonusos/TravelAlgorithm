@@ -45,9 +45,11 @@ void AMyGraph::BeginPlay() {
 				}
 			}
 		}
-		EdgeSetup();
+		//EdgeSetup();
 
-		Dijkstra(VertList[0], VertList[VertList.Num() - 1]);
+		TSP(VertList[0]);
+
+		//Dijkstra(VertList[0], VertList[VertList.Num() - 1]);
 	}
 }
 
@@ -63,22 +65,93 @@ void AMyGraph::Tick(float DeltaTime)
 
 
 void AMyGraph::EdgeSetup() {
-	for (int i = 0; i < 100; i++) {
-		
-		int32 RandSrc = FMath::RandRange(0,VertList.Num() - 1);
-		int32 RandDest = FMath::RandRange(0,VertList.Num() - 1);
-		
-		VertList[RandSrc]->Edge = VertList[RandDest];
-		VertList[RandSrc]->Edge->Weight = FVector::Dist(VertList[RandSrc]->GetActorLocation(), VertList[RandDest]->GetActorLocation());
-		VertList[RandDest]->ReverseEdge = VertList[RandSrc];
-		VertList[RandDest]->ReverseEdge->Weight = FVector::Dist(VertList[RandDest]->GetActorLocation(), VertList[RandSrc]->GetActorLocation());
-
-		VertList[RandSrc]->EdgeList.Add(VertList[RandSrc]->Edge);
-		VertList[RandDest]->EdgeList.Add(VertList[RandDest]->ReverseEdge);
-		
-		DrawDebugLine(GetWorld(), VertList[RandSrc]->GetActorLocation(), VertList[RandDest]->GetActorLocation(), FColor::White,
-			true, -1, 0, 1);
+	for (AMyVertex* Vert : VertList) { // Different way of for looping: for (*Datatype of Array* newName : Array)
+		int RandEdgeAmount = FMath::RandRange(2,6);
+		for (int i = 0; i < RandEdgeAmount; i++) {
+			int RandVert = FMath::RandRange(0,VertList.Num() - 1);
+			
+			Vert->EdgeList.Emplace(VertList[RandVert]);
+			DrawDebugLine(GetWorld(), Vert->GetActorLocation(), VertList[RandVert]->GetActorLocation(),
+				FColor::White,true, -1, 0, 1);
+		}
 	}
+	
+	// for (int i = 0; i < VertList.Num(); i++) {
+	// 	
+	// 	int32 RandSrc = FMath::RandRange(0,VertList.Num() - 1);
+	// 	int32 RandDest = FMath::RandRange(0,VertList.Num() - 1);
+	// 	
+	// 	VertList[RandSrc]->EdgeList.Emplace(VertList[RandDest]);
+	// 	VertList[RandSrc]->EdgeList[RandDest]->Weight = FVector::Dist(VertList[RandSrc]->GetActorLocation(), VertList[RandDest]->GetActorLocation());
+	//
+	// 	VertList[RandDest]->EdgeList.Emplace(VertList[RandSrc]);
+	// 	VertList[RandDest]->EdgeList[RandSrc]->Weight = FVector::Dist(VertList[RandDest]->GetActorLocation(), VertList[RandSrc]->GetActorLocation());
+	//
+	// 	VertList[RandSrc]->EdgeList.Add(VertList[RandSrc]->Edge);
+	// 	VertList[RandDest]->EdgeList.Add(VertList[RandDest]->ReverseEdge);
+	// 	
+	// 	DrawDebugLine(GetWorld(), VertList[RandSrc]->GetActorLocation(), VertList[RandDest]->GetActorLocation(), FColor::White,
+	// 		true, -1, 0, 1);
+	// }
+}
+
+void AMyGraph::TSP(AMyVertex* Start) {
+
+	AMyVertex* CurrentVert = Start;
+	CurrentVert->bVisited = true;
+	AMyVertex* ShortestDistptr = nullptr;
+
+	
+	//TMap<AMyVertex*, float> Unvisited;
+	TArray<AMyVertex*> UnvisitedArr;
+	
+	for(int i = 0; i < VertList.Num(); i++) {
+		VertList[i]->PreviousVert = nullptr;
+		if (VertList[i]->bVisited != true) {
+
+			UnvisitedArr.Add(VertList[i]);
+		}
+	}
+
+	bool allVisited = false;
+	
+	while (allVisited == false) {
+
+		CurrentVert->bVisited = true;
+		float ShortestDist = 99999;
+		int visitedCounter = 0;
+		
+		for(int i = 0; i < UnvisitedArr.Num(); i++) {
+
+			float VertDistance = FVector::Distance(CurrentVert->GetActorLocation(), UnvisitedArr[i]->GetActorLocation());
+
+			if (ShortestDist > VertDistance && UnvisitedArr[i]->bVisited == false) {
+				ShortestDist = VertDistance;
+				ShortestDistptr = UnvisitedArr[i];
+			}
+			
+			if (UnvisitedArr[i]->bVisited == true) {
+				visitedCounter += 1;
+				if (visitedCounter == UnvisitedArr.Num() - 1) {
+					allVisited = true;
+				}
+			}
+		}
+		CurrentVert->EdgeList.Add(ShortestDistptr); // Go to next node
+
+		DrawDebugLine(GetWorld(),CurrentVert->GetActorLocation(),
+		 	CurrentVert->EdgeList[0]->GetActorLocation(),FColor::Green,
+		 	true,-1,0,3); // Draw line path
+		
+		CurrentVert = CurrentVert->EdgeList[0];
+	}
+	CurrentVert->EdgeList.Add(Start); // Complete the loop
+
+	DrawDebugLine(GetWorld(),CurrentVert->GetActorLocation(),
+			 CurrentVert->EdgeList[0]->GetActorLocation(),FColor::Green,
+			 true,-1,0,3);
+
+	Start->PreviousVert = CurrentVert;
 }
 
 void AMyGraph::Dijkstra(AMyVertex* StartVert, AMyVertex* EndVert) {
@@ -98,11 +171,11 @@ void AMyGraph::Dijkstra(AMyVertex* StartVert, AMyVertex* EndVert) {
 			//Unvisited.Emplace(VertList[i]->Distance, 0); // Infinity
 		}
 	}
-	VertList[18]->Edge = EndVert;
+	//VertList[18]->EdgeList = EndVert;
 	
 	StartVert->Distance = 0;
 	StartVert->bVisited = true;
-	StartVert->PreviousVert = nullptr;
+	//StartVert->PreviousVert = nullptr;
 	AMyVertex* CurrentVert = StartVert;
 
 	if (StartVert == nullptr) {
@@ -122,13 +195,13 @@ void AMyGraph::Dijkstra(AMyVertex* StartVert, AMyVertex* EndVert) {
 	 	//int MinVal = Unvisited[0];
 	 	for (int i = 0; i < CurrentVert->EdgeList.Num(); i++) {
 	 		if (CurrentVert->EdgeList[i] && CurrentVert->EdgeList[i]->bVisited != true) {
-	 			TotalDistance = CurrentVert->Edge->Distance + CurrentVert->Distance;
+	 			TotalDistance = CurrentVert->EdgeList[i]->Distance + CurrentVert->Distance;
 	
-	 			Unvisited.Emplace(CurrentVert->Edge->Distance, CurrentVert->Edge);
+	 			Unvisited.Emplace(CurrentVert->EdgeList[i]->Distance, CurrentVert->EdgeList[i]);
 	
-	 			if (TotalDistance < CurrentVert->Edge->Distance) {
-	 				CurrentVert->Edge->Distance = TotalDistance;
-	 				CurrentVert->Edge->PreviousVert = CurrentVert;
+	 			if (TotalDistance < CurrentVert->EdgeList[i]->Distance) {
+	 				CurrentVert->EdgeList[i]->Distance = TotalDistance;
+	 				CurrentVert->EdgeList[i]->PreviousVert = CurrentVert;
 	 			}
 	 		}
 	 	}
