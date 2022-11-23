@@ -31,24 +31,26 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Vertex")
 	TArray<AMyVertex*> VertList; // Hold all the nodes
 
-	
-	float TotalDistance;
+	UPROPERTY()
+	AMyVertex* Cheapest;
 	
 
 	UFUNCTION()
 	void EdgeSetup();
 
 	// Part of Travelling Salesman
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void TSP(AMyVertex* Start);
 	
 	// Part of Dijkstra
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void Dijkstra(AMyVertex* Start, AMyVertex* End);
 
 	// Part of A*
+	UFUNCTION(BlueprintCallable)
 	int AStar();
 	void ReconstructPath();
 	
-	
+	UFUNCTION(BlueprintCallable)
+	void DeleteGraph();
 };
