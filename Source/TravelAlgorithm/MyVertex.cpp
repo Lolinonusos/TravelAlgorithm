@@ -19,8 +19,6 @@ AMyVertex::AMyVertex()
 	UnvisitedMaterial = CreateDefaultSubobject<UMaterial>(TEXT("UnvisitedMaterial"));
 	VisitedMaterial = CreateDefaultSubobject<UMaterial>(TEXT("VisitedMaterial"));
 	EndMaterial = CreateDefaultSubobject<UMaterial>(TEXT("EndMaterial"));
-	
-	
 }
 
 // Called when the game starts or when spawned

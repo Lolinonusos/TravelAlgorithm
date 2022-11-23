@@ -20,7 +20,7 @@ AMyGraph::AMyGraph()
 void AMyGraph::BeginPlay() {
 	Super::BeginPlay();
 	
-	int32 VertexTotal = 50;
+	int32 VertexTotal = 100;
 	
 	UWorld* World = GetWorld();
 	if (World)
