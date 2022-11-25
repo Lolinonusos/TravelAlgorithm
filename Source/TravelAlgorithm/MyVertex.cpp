@@ -25,6 +25,8 @@ AMyVertex::AMyVertex()
 void AMyVertex::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Weight = FMath::RandRange(1, 10);
 	
 }
 
@@ -35,18 +37,18 @@ void AMyVertex::Tick(float DeltaTime)
 
 }
 
-void AMyVertex::SetSartMat() {
-	SphereMesh->SetMaterial(0, StartMaterial);
+void AMyVertex::SetStartMat() {
+	SphereMesh->SetMaterial(0, StartMaterial); // Copper
 }
 
 void AMyVertex::SetUnvisitedMat() {
-	SphereMesh->SetMaterial(0, UnvisitedMaterial);
+	SphereMesh->SetMaterial(0, UnvisitedMaterial); // Rusted
 }
 
 void AMyVertex::SetVisitedMat() {
-	SphereMesh->SetMaterial(0, VisitedMaterial);
+	SphereMesh->SetMaterial(0, VisitedMaterial); // Silver/steel
 }
 
 void AMyVertex::SetEndMat() {
-	SphereMesh->SetMaterial(0, EndMaterial);
+	SphereMesh->SetMaterial(0, EndMaterial); // Golden
 }

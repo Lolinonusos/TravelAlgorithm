@@ -1,10 +1,10 @@
 {
     "Version": "1.1",
     "Data": {
-        "Source": "c:\\users\\linus\\desktop\\2.aar\\algoritmer og datastruktur\\travelalgorithm\\plugins\\developer\\riderlink\\source\\rd\\thirdparty\\thirdparty.cpp",
+        "Source": "d:\\2.ar\\algoritmer og datastruktur\\travelalgorithm\\plugins\\developer\\riderlink\\source\\rd\\thirdparty\\thirdparty.cpp",
         "ProvidedModule": "",
         "Includes": [
-            "c:\\users\\linus\\desktop\\2.aar\\algoritmer og datastruktur\\travelalgorithm\\plugins\\developer\\riderlink\\intermediate\\build\\win64\\unrealeditor\\development\\rd\\definitions.h"
+            "d:\\2.ar\\algoritmer og datastruktur\\travelalgorithm\\plugins\\developer\\riderlink\\intermediate\\build\\win64\\unrealeditor\\development\\rd\\definitions.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

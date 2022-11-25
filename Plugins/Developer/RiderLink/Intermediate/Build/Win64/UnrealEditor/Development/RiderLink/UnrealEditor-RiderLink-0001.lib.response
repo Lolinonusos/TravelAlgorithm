@@ -6,6 +6,6 @@
 /NAME:"UnrealEditor-RiderLink-0001.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"C:\Users\linus\Desktop\2.aar\Algoritmer og datastruktur\TravelAlgorithm\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderLink\Module.RiderLink.cpp.obj"
-"C:\Users\linus\Desktop\2.aar\Algoritmer og datastruktur\TravelAlgorithm\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderLink\Default.rc2.res"
-/OUT:"C:\Users\linus\Desktop\2.aar\Algoritmer og datastruktur\TravelAlgorithm\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderLink\UnrealEditor-RiderLink-0001.lib"
+"D:\2.ar\Algoritmer og datastruktur\TravelAlgorithm\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderLink\Module.RiderLink.cpp.obj"
+"D:\2.ar\Algoritmer og datastruktur\TravelAlgorithm\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderLink\Default.rc2.res"
+/OUT:"D:\2.ar\Algoritmer og datastruktur\TravelAlgorithm\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RiderLink\UnrealEditor-RiderLink-0001.lib"

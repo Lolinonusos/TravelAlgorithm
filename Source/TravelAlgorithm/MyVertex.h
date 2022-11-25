@@ -30,22 +30,20 @@ public:
 	// Sets default values for this actor's properties
 	AMyVertex();
 
-	int32 Weight;
+	int32 Weight; //
 	
+	float DistanceFromStart; // Distance from start node
 
-	//UPROPERTY()
-	//AMyVertex* ReverseEdge;
+	float DistanceFromEnd; // Heuristic cost
+	
+	bool bVisited = false;
 	
 	UPROPERTY()
 	AMyVertex* PreviousVert;
 
 	
 	TArray<AMyVertex*> EdgeList; // Contains edges that point to other vertexes
-
-	
-	float Distance;
-	
-	bool bVisited = false;
+	// Together with the VertList in MyGraph this makes an adjacency list of sorts
 	
 	// Vertexes visualized
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
@@ -71,7 +69,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SetSartMat();
+	void SetStartMat();
 	void SetUnvisitedMat();
 	void SetVisitedMat();
 	void SetEndMat();

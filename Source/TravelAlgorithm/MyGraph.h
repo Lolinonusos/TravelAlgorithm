@@ -24,13 +24,16 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+
+	// This is for spawning the blueprint versions
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vertex")
 	TSubclassOf<AMyVertex> BP_Vertex;
+
 	
 	UPROPERTY(VisibleAnywhere, Category = "Vertex")
 	TArray<AMyVertex*> VertList; // Hold all the nodes
 
+	// Find the cheapest path
 	UPROPERTY()
 	AMyVertex* Cheapest;
 	
@@ -48,8 +51,7 @@ public:
 
 	// Part of A*
 	UFUNCTION(BlueprintCallable)
-	int AStar();
-	void ReconstructPath();
+	void AStar(AMyVertex* Start, AMyVertex* End);
 	
 	UFUNCTION(BlueprintCallable)
 	void DeleteGraph();

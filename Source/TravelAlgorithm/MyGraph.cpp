@@ -33,12 +33,6 @@ void AMyGraph::BeginPlay() {
 				// UE_LOG(LogTemp, Warning, TEXT("Hello %d"), i);
 				if (NewVertex) {
 					VertList.Add(NewVertex);
-					// if (i == 0) {
-					// 	VertList[i]->SetSartMat();
-					// }
-					// if (i == VertexTotal - 1) {
-					// 	VertList[i]->SetEndMat();
-					// }
 					VertList[i]->SetUnvisitedMat();
 				}
 			}
@@ -47,7 +41,9 @@ void AMyGraph::BeginPlay() {
 
 		EdgeSetup();
 
-		Dijkstra(VertList[0], VertList[VertList.Num() - 1]);
+		//Dijkstra(VertList[0], VertList[VertList.Num() - 1]);
+
+		AStar(VertList[0], VertList[VertList.Num() - 1]);
 	}
 }
 
@@ -63,6 +59,9 @@ void AMyGraph::Tick(float DeltaTime)
 
 
 void AMyGraph::EdgeSetup() {
+
+	// Generate connections between vertices.
+	// Probably has a low chance of creating different clusters (bad)
 	for (AMyVertex* Vert : VertList) { // Different way of for looping: for (*Datatype of Array* newName : Array)
 
 		int RandEdgeAmount = FMath::RandRange(2,6);
@@ -76,24 +75,6 @@ void AMyGraph::EdgeSetup() {
 				FColor::White,true, -1, 0, 1); // draw line between the vertices
 		}
 	}
-	
-	// for (int i = 0; i < VertList.Num(); i++) {
-	// 	
-	// 	int32 RandSrc = FMath::RandRange(0,VertList.Num() - 1);
-	// 	int32 RandDest = FMath::RandRange(0,VertList.Num() - 1);
-	// 	
-	// 	VertList[RandSrc]->EdgeList.Emplace(VertList[RandDest]);
-	// 	VertList[RandSrc]->EdgeList[RandDest]->Weight = FVector::Dist(VertList[RandSrc]->GetActorLocation(), VertList[RandDest]->GetActorLocation());
-	//
-	// 	VertList[RandDest]->EdgeList.Emplace(VertList[RandSrc]);
-	// 	VertList[RandDest]->EdgeList[RandSrc]->Weight = FVector::Dist(VertList[RandDest]->GetActorLocation(), VertList[RandSrc]->GetActorLocation());
-	//
-	// 	VertList[RandSrc]->EdgeList.Add(VertList[RandSrc]->Edge);
-	// 	VertList[RandDest]->EdgeList.Add(VertList[RandDest]->ReverseEdge);
-	// 	
-	// 	DrawDebugLine(GetWorld(), VertList[RandSrc]->GetActorLocation(), VertList[RandDest]->GetActorLocation(), FColor::White,
-	// 		true, -1, 0, 1);
-	// }
 }
 
 void AMyGraph::TSP(AMyVertex* Start) {
@@ -168,115 +149,178 @@ void AMyGraph::Dijkstra(AMyVertex* StartVert, AMyVertex* EndVert) {
 	for (int i = 0; i < VertList.Num(); i++) {
 		
 		if (VertList[i] != StartVert) {
-			VertList[i]->Distance = 99999;// Infinity
+			VertList[i]->DistanceFromStart = 99999;// Infinity
 			VertList[i]->bVisited = false;
 			VertList[i]->PreviousVert = nullptr;
 			//Unvisited.Emplace(VertList[i]->Distance, VertList[i]); 
 		}
 	}
 	
-	StartVert->Distance = 0;
+	StartVert->DistanceFromStart = 0;
 	StartVert->bVisited = true;
 	StartVert->PreviousVert = nullptr;
-	StartVert->SetSartMat();
+	StartVert->SetStartMat();
 	AMyVertex* CurrentVert = StartVert;
-	EndVert->Distance = 0;
+	EndVert->DistanceFromStart = 0;
 	
-	// if (StartVert == nullptr) {
-	// 	return;
-	// }
-	// if (EndVert == nullptr) {
-	// 	return;
-	// }
-	
-	
+	while (!EndVert->bVisited) {
 		
-	//if (CurrentVert) {
-		
-		while (!EndVert->bVisited) {
+		UE_LOG(LogTemp, Warning, TEXT("There are %d"), UnvisitedMap.Num());
 
-			UE_LOG(LogTemp, Warning, TEXT("There are %d"), UnvisitedMap.Num());
+		// Check for neighbours
+	 	for (int i = 0; i < CurrentVert->EdgeList.Num(); i++) {
+	 		// Only execute if neighbour vertex is not visited
+	 		if (!CurrentVert->EdgeList[i]->bVisited) { 
 
-			// Check for neighbours
-	 		for (int i = 0; i < CurrentVert->EdgeList.Num(); i++) {
-	 			// Only execute if neighbour vertex is not visited
-	 			if (!CurrentVert->EdgeList[i]->bVisited) { 
-
-					float DistanceBetweenVerts = CurrentVert->GetDistanceTo(CurrentVert->EdgeList[i]);
+				float DistanceBetweenVerts = CurrentVert->GetDistanceTo(CurrentVert->EdgeList[i]);
 	 				
-	 				float TotalDistance = DistanceBetweenVerts + CurrentVert->Distance;
+	 			float TotalDistance = DistanceBetweenVerts + CurrentVert->DistanceFromStart;
 		
-					CurrentVert->EdgeList[i]->PreviousVert = CurrentVert;
+				CurrentVert->EdgeList[i]->PreviousVert = CurrentVert;
 		
-	 				if (TotalDistance < CurrentVert->EdgeList[i]->Distance) {
+	 			if (TotalDistance < CurrentVert->EdgeList[i]->DistanceFromStart) {
 	 					
-	 					CurrentVert->EdgeList[i]->Distance = TotalDistance;
-	 					UE_LOG(LogTemp, Warning, TEXT("Setting previous"));
-
-	 				}
-	 				
-	 				UnvisitedMap.Emplace(CurrentVert->EdgeList[i]->Distance, CurrentVert->EdgeList[i]);
-	 				UE_LOG(LogTemp, Warning, TEXT("Emplacing into TMap"));
+	 				CurrentVert->EdgeList[i]->DistanceFromStart = TotalDistance;
+	 				UE_LOG(LogTemp, Warning, TEXT("Setting previous"));
 
 	 			}
-	 		}
-		
-	 		if (UnvisitedMap.begin().Value()->bVisited == false) {
-	 			UnvisitedMap.KeySort([](float A, float B) {return A < B;});
-	 			Cheapest = UnvisitedMap.begin().Value();
-	 			//Unvisited.begin().Value()->PreviousVert = CurrentVert;
+	 				
+	 			UnvisitedMap.Emplace(CurrentVert->EdgeList[i]->DistanceFromStart, CurrentVert->EdgeList[i]);
+	 			UE_LOG(LogTemp, Warning, TEXT("Emplacing into TMap"));
 
-	 			if (Cheapest) {
+	 		}
+	 	}
+		
+	 	if (UnvisitedMap.begin().Value()->bVisited == false) {
+	 		UnvisitedMap.KeySort([](float A, float B) {return A < B;}); // Sorts the lowest value to the beginning of the TMap
+	 		Cheapest = UnvisitedMap.begin().Value();
+	 		//Unvisited.begin().Value()->PreviousVert = CurrentVert;
+
+	 		if (Cheapest) {
 	 				
 	 			DrawDebugLine(GetWorld(),CurrentVert->GetActorLocation(),Cheapest->GetActorLocation(),
 					 FColor::Blue,true,-1,0,5);
-	 			}
+	 		}
 	 			//Cheapest->PreviousVert = CurrentVert;
 	 			
-	 			CurrentVert = Cheapest;
-				CurrentVert->SetVisitedMat();
-	 			UnvisitedMap.Remove(UnvisitedMap.begin().Key());
-	 		}
-			CurrentVert->bVisited = true;
+	 		CurrentVert = Cheapest;
+			CurrentVert->SetVisitedMat();
+	 		UnvisitedMap.Remove(UnvisitedMap.begin().Key());
+	 	}
+		CurrentVert->bVisited = true;
 
 
 			
-			if (EndVert->bVisited == true) {
-	 			UE_LOG(LogTemp, Warning, TEXT("BIG SUCCESS"));
-				EndVert->SetEndMat();
-				//EndVert->PreviousVert = CurrentVert;
-				if (CurrentVert == EndVert) {
-					UE_LOG(LogTemp, Warning, TEXT("CurrentVert = Endvert"));
-				}
-	 		}
-
-		}
-		if (EndVert->PreviousVert == nullptr) {
-			UE_LOG(LogTemp, Warning, TEXT("Whydo"));
-
-		}
-		AMyVertex* DrawPath = EndVert;
-		if (DrawPath->PreviousVert != nullptr) {
-			while(DrawPath->PreviousVert != nullptr) {
-
-				UE_LOG(LogTemp, Warning, TEXT("Help"));
-				DrawDebugLine(GetWorld(),DrawPath->GetActorLocation(),DrawPath->PreviousVert->GetActorLocation(),
-					FColor::Red,true,-1,0,5);
-	 		
-	 			DrawPath = DrawPath->PreviousVert;
+		if (EndVert->bVisited == true) {
+	 		UE_LOG(LogTemp, Warning, TEXT("BIG SUCCESS"));
+			EndVert->SetEndMat();
+			//EndVert->PreviousVert = CurrentVert;
+			if (CurrentVert == EndVert) {
+				UE_LOG(LogTemp, Warning, TEXT("CurrentVert = Endvert"));
 			}
+	 	}
+	}
+	if (EndVert->PreviousVert == nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("Whydo"));
+	}
+	AMyVertex* DrawPath = EndVert;
+	if (DrawPath->PreviousVert != nullptr) {
+		while(DrawPath->PreviousVert != nullptr) {
+
+			UE_LOG(LogTemp, Warning, TEXT("Help"));
+			DrawDebugLine(GetWorld(),DrawPath->GetActorLocation(),DrawPath->PreviousVert->GetActorLocation(),
+			FColor::Red,true,-1,0,5);
+	 		
+			DrawPath = DrawPath->PreviousVert;
 		}
-		else {
-		 	UE_LOG(LogTemp, Warning, TEXT("Error"));
+	}
+	else {
+	 	UE_LOG(LogTemp, Warning, TEXT("Error"));
+	}
+}
+
+
+void AMyGraph::AStar(AMyVertex* StartVert, AMyVertex* EndVert) {
+
+	for (int i = 0; i < VertList.Num(); i++) {
+		
+		if (VertList[i] != StartVert) {
+			VertList[i]->DistanceFromStart = 99999;// Infinity
+			VertList[i]->bVisited = false;
+			VertList[i]->PreviousVert = nullptr;
 		}
-	//}
 	}
 
-
-int AMyGraph::AStar() {
-
+	StartVert->DistanceFromStart = 0;
+	StartVert->bVisited = true;
+	StartVert->PreviousVert = nullptr;
+	StartVert->SetStartMat();
+	AMyVertex* CurrentVert = StartVert;
+	EndVert->DistanceFromStart = 0;
 	
-	return 1;
+	TMap<float, AMyVertex*> UnvisitedMap;
+	
+	while (!EndVert->bVisited) {
+
+		// Check for neighbours
+		for (int i = 0; i < CurrentVert->EdgeList.Num(); i++) {
+			// Only execute if neighbour vertex is not visited
+			if (!CurrentVert->EdgeList[i]->bVisited) {
+				float DistanceBetweenVerts = CurrentVert->GetDistanceTo(CurrentVert->EdgeList[i]);
+
+				// G from examples
+				float TotalDistanceFromStart = DistanceBetweenVerts + CurrentVert->DistanceFromStart;
+				
+				CurrentVert->EdgeList[i]->PreviousVert = CurrentVert;
+		
+				if (TotalDistanceFromStart < CurrentVert->EdgeList[i]->DistanceFromStart) {
+	 					
+					CurrentVert->EdgeList[i]->DistanceFromStart = TotalDistanceFromStart;
+					UE_LOG(LogTemp, Warning, TEXT("Setting previous"));
+
+				}
+				float TotalDistanceFromEnd = CurrentVert->EdgeList[i]->GetDistanceTo(EndVert) + CurrentVert->EdgeList[i]->DistanceFromStart;
+
+				// G + H
+				float F = TotalDistanceFromStart + TotalDistanceFromEnd;
+
+				UnvisitedMap.Emplace(F, CurrentVert->EdgeList[i]);
+			}
+		}
+
+
+			if (UnvisitedMap.begin().Value()->bVisited == false) {
+				UnvisitedMap.KeySort([](float A, float B) {return A < B;});
+				Cheapest = UnvisitedMap.begin().Value();
+
+				if (Cheapest) {
+	 				
+					DrawDebugLine(GetWorld(),CurrentVert->GetActorLocation(),Cheapest->GetActorLocation(),
+						FColor::Blue,true,-1,0,5);
+				}
+				//Cheapest->PreviousVert = CurrentVert;
+	 			
+				CurrentVert = Cheapest;
+				CurrentVert->SetVisitedMat();
+				UnvisitedMap.Remove(UnvisitedMap.begin().Key());
+					
+			}
+
+			UnvisitedMap.Empty();		
+			CurrentVert->bVisited = true;
+		}	
+
+		EndVert->SetEndMat();
+	
+		AMyVertex* DrawPath = EndVert;
+		while(DrawPath->PreviousVert != nullptr) {
+
+			UE_LOG(LogTemp, Warning, TEXT("Help"));
+			DrawDebugLine(GetWorld(),DrawPath->GetActorLocation(),DrawPath->PreviousVert->GetActorLocation(),
+			FColor::Red,true,-1,0,5);
+	 		
+			DrawPath = DrawPath->PreviousVert;
+		}
 }
 
 void AMyGraph::ReconstructPath() {
