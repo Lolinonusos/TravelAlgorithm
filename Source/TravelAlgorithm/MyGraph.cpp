@@ -323,9 +323,6 @@ void AMyGraph::AStar(AMyVertex* StartVert, AMyVertex* EndVert) {
 		}
 }
 
-void AMyGraph::ReconstructPath() {
-}
-
 void AMyGraph::DeleteGraph() {
 
 	for (int i = 0; i < VertList.Num(); i++) {
